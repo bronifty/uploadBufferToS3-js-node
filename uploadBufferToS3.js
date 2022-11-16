@@ -34,6 +34,6 @@ http.get(uploadURL, function (res) {
     .on("end", function () {
       let buffer = Buffer.concat(data);
       console.log(buffer.toString("base64"));
-      uploadFile(buffer, "file.jpg", "image/jpeg");
+      uploadFile(buffer, "file.jpg", "image/jpg");
     });
 });
