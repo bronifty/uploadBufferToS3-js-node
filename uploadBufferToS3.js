@@ -1,0 +1,39 @@
+import http from "http";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import dotenv from "dotenv";
+dotenv.config();
+const uploadURL = process.env.UPLOAD_URL;
+const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const bucket = process.env.AWS_BUCKET_NAME;
+const s3Client = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
+
+export function uploadFile(fileBuffer, fileName, mimetype) {
+  const uploadParams = {
+    Bucket: bucket,
+    Body: fileBuffer,
+    Key: fileName,
+    ContentType: mimetype,
+  };
+  return s3Client.send(new PutObjectCommand(uploadParams));
+}
+
+http.get(uploadURL, function (res) {
+  var data = [];
+  res
+    .on("data", function (chunk) {
+      data.push(chunk);
+    })
+    .on("end", function () {
+      let buffer = Buffer.concat(data);
+      console.log(buffer.toString("base64"));
+      uploadFile(buffer, "file.jpg", "image/jpeg");
+    });
+});
