@@ -11,7 +11,7 @@ const request = http.get(
     // read the file and upload it to s3
     fileReader.on("data", (chunk) => {
       console.log(chunk);
-      uploadFile(chunk, "file.jpg", "image/jpeg");
+      uploadFile(chunk, "file.jpg", "image/jpg");
     });
   }
 );
